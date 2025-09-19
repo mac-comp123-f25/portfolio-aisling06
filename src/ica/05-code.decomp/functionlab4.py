@@ -19,6 +19,22 @@ def drawFiveCircles(turt, radius, centerX, centerY):
         turt.end_fill()
         turt.left(72)
 
+def drawCenterCircle(turt, centerX, centerY):
+    """
+      Draw the center circle of a flower.
+      Inputs:
+        turt    - the turtle that will do the drawing
+        centerX - x coordinate of the flower’s center
+        centerY - y coordinate of the flower’s center
+      """
+    turt.up()
+    turt.goto(centerX, centerY - 15)
+    turt.down()
+    turt.begin_fill()
+    turt.circle(15)
+    turt.end_fill()
+
+
 win = turtle.Screen()
 win.bgcolor("light sky blue")
 
@@ -46,12 +62,7 @@ stampTurtle.hideturtle()
 drawFiveCircles(sepalTurtle, 50, 0, 0)
 drawFiveCircles(petalTurtle, 25, 0, 0)
 
-centerTurtle.up()
-centerTurtle.goto(0, -15)
-centerTurtle.down()
-centerTurtle.begin_fill()
-centerTurtle.circle(15)
-centerTurtle.end_fill()
+drawCenterCircle(centerTurtle, 0, 0)
 
 stampTurtle.up()
 stampTurtle.goto(-2,0)
@@ -61,12 +72,7 @@ stampTurtle.stamp()
 drawFiveCircles(sepalTurtle, 50, 0, 220)
 drawFiveCircles(petalTurtle, 25, 0, 220)
 
-centerTurtle.up()
-centerTurtle.goto(0, 205)
-centerTurtle.down()
-centerTurtle.begin_fill()
-centerTurtle.circle(15)
-centerTurtle.end_fill()
+drawCenterCircle(centerTurtle, 0, 220)
 
 stampTurtle.up()
 stampTurtle.goto(-2,220)
@@ -76,12 +82,7 @@ stampTurtle.stamp()
 drawFiveCircles(sepalTurtle, 50, 220, 0)
 drawFiveCircles(petalTurtle, 25, 220, 0)
 
-centerTurtle.up()
-centerTurtle.goto(220, -15)
-centerTurtle.down()
-centerTurtle.begin_fill()
-centerTurtle.circle(15)
-centerTurtle.end_fill()
+drawCenterCircle(centerTurtle, 220, 0)
 
 stampTurtle.up()
 stampTurtle.goto(218,0)
@@ -91,12 +92,7 @@ stampTurtle.stamp()
 drawFiveCircles(sepalTurtle, 50, 0, -220)
 drawFiveCircles(petalTurtle, 25, 0, -220)
 
-centerTurtle.up()
-centerTurtle.goto(0, -235)
-centerTurtle.down()
-centerTurtle.begin_fill()
-centerTurtle.circle(15)
-centerTurtle.end_fill()
+drawCenterCircle(centerTurtle, 0, -220)
 
 stampTurtle.up()
 stampTurtle.goto(-2,-220)
@@ -106,12 +102,7 @@ stampTurtle.stamp()
 drawFiveCircles(sepalTurtle, 50, -220, 0)
 drawFiveCircles(petalTurtle, 25, -220, 0)
 
-centerTurtle.up()
-centerTurtle.goto(-220, -15)
-centerTurtle.down()
-centerTurtle.begin_fill()
-centerTurtle.circle(15)
-centerTurtle.end_fill()
+drawCenterCircle(centerTurtle, -220, 0)
 
 stampTurtle.up()
 stampTurtle.goto(-222,0)

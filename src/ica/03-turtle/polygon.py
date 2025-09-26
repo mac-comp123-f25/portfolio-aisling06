@@ -1,10 +1,10 @@
 n = 6
 import turtle
 window = turtle.Screen()
-poly_turle = turtle.Turtle()
-poly_turle.color("blue")
-poly_turle.shape("turtle")
+poly_turtle = turtle.Turtle()
+poly_turtle.color("blue")
+poly_turtle.shape("turtle")
 for reps in range(n):
-    poly_turle.forward(180)
-    poly_turle.right(360/n)
+    poly_turtle.forward(180)
+    poly_turtle.right(360/n)
 window.exitonclick()

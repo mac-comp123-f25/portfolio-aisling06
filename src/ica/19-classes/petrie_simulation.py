@@ -36,5 +36,28 @@ class Employee:
                 + " (will comment: " + str(self.will_comment) + "): "
                 + str(self.comments_received)
                 + " sexist comments received")
-    
 
+def print_employee_list(lst):
+        for employee in lst:
+            print(employee)
+
+def create_employees(num_employees):
+    num_male = int(num_employees * 0.8)
+    num_female = num_employees - num_male
+    male_list = []
+    for employee in range(num_male):
+        male_list.append(Employee("Man", False))
+    female_list = []
+    for employee in range(num_female):
+        female_list.append(Employee("Woman", False))
+    list_total = male_list + female_list
+    return list_total
+
+lst = [Employee('Man', True),
+       Employee('Man', False),
+       Employee('Woman', True),
+       Employee('Woman', False)]
+print_employee_list(lst)
+
+employees = create_employees(10)
+print_employee_list(employees)

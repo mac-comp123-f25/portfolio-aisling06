@@ -1,17 +1,23 @@
 import turtle
 
+def spiral_in(turt, side_len):
+    if side_len < 5:
+        return
 
-def spiral_in(spiro_turt, side_len):
-    pass
+    turt.forward(side_len)
+    turt.right(90)
+
+    spiral_in(turt, side_len - 5)
 
 
-def check_spiral_in(size: int) -> None:
-    """A faster way to test spiral_in function"""
-    scr = turtle.Screen()
+def check_spiral_in(start_len):
+    wn = turtle.Screen()
+    wn.setworldcoordinates(-10, -10, start_len + 10, start_len + 10)
     turt = turtle.Turtle()
-    spiral_in(turt, size)
-    scr.exitonclick()
+    turt.speed(0)
+    spiral_in(turt, start_len)
+    wn.exitonclick()
 
 
-if __name__ == '__main__':
-    check_spiral_in(20)
+# check_spiral_in(200)
+

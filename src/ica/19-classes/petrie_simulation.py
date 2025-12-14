@@ -1,123 +1,145 @@
 """
-Contains a simulation of the Petrie Multiplier that is based on classes.
+Extended Petrie Multiplier Simulation (conversation-based model)
+Implements Steps 1–5 as described in the assignment.
 """
 
 import random
-import math
 
 
+# -----------------------------
+# STEP 1: Comment probability distribution
+# -----------------------------
+COMMENT_PROBABILITIES = [
+    0.0,          # 50% will not make comments
+    0.20, 0.40, 0.60, 0.80, 1.00  # each 10%
+]
+COMMENT_WEIGHTS = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]   # sums to 1
+
+
+# -----------------------------
+# Employee class
+# -----------------------------
 class Employee:
-    """
-    For this simulation, we only focus on the gender of an employee, and on
-    whether this employee is likely to make negative statements
-    towards the other gender.
-    """
-
-    def __init__(self, gender: str, will_comment):
-        """
-        Takes in the employee's gender and whether they comment, and it
-        saves those values to instance variables. It also initializes the
-        variable that holds the comments received by this employee to zero.
-        """
-        # TODO: Implement this method then remove this line
-        pass
+    def __init__(self, gender: str, comment_prob: float):
+        self.gender = gender              # "Man" or "Woman"
+        self.comment_prob = comment_prob  # probability this employee comments
+        self.comments_received = 0        # counter
 
     def __str__(self):
-        """
-        Produces a printable string format for this employee.
-        """
         return (self.gender.rjust(5)
-                + ": "
-                + str(self.comments_received)
-                + " sexist comments received")
+                + f": {self.comments_received} sexist comments received")
 
 
+# -----------------------------
+# Helper printing function
+# -----------------------------
 def print_employee_list(lst):
-    """
-    Given a list of employees, this method will print the details of each employee
-    by using the print() method
-    """
-    # TODO: Implement this function then remove this line
-    pass
+    for emp in lst:
+        print(emp)
+    print()
 
 
+# -----------------------------
+# STEP 2: create employees (80% men, 20% women)
+# each with assigned comment probability from distribution
+# -----------------------------
 def create_employees(total_num):
-    """
-    Takes in the number of employees to make, builds and returns a list that contains
-    that many employees. It ensures that ~80% are men and the rest women.
-    """
-    # TODO: Implement this function then remove this line
-    pass
+    employees = []
+
+    for i in range(total_num):
+        gender = "Man" if random.random() < 0.8 else "Woman"
+        comment_prob = random.choices(COMMENT_PROBABILITIES, COMMENT_WEIGHTS)[0]
+        employees.append(Employee(gender, comment_prob))
+
+    return employees
 
 
-def create_commenters(lst):
-    """
-    Given a list of employees, make 20% of each gender be sexist employees. This
-    method should not return anything.
-    """
-    # TODO: Implement this function then remove this line
-    pass
+# -----------------------------
+# STEP 3: Generate one conversation size
+# (distribution: 30% size2, 20% size3, 10% each for 4–8)
+# -----------------------------
+def random_conversation_size():
+    r = random.random()
+    if r < 0.30:
+        return 2
+    elif r < 0.50:
+        return 3
+    else:
+        return random.randint(4, 8)  # 10% each for 4,5,6,7,8 → total 50%
 
 
-def generate_comments(lst):
-    """
-    Given a list of employees, have each sexist employee give one sexist comment to
-    another employee of the opposite gender, chosen randomly. This method should
-    not return anything
-    """
-    # TODO: Implement this function then remove this line
-    pass
+# -----------------------------
+# STEP 4 & 5:
+# Simulate one conversation:
+#   - random subset of employees
+#   - sexist remarks only if speaker NOT outnumbered by opposite gender
+#   - each speaker attempts 1 possible sexist remark (Bernoulli trial)
+# -----------------------------
+def simulate_conversation(employees):
+
+    # Pick a random group size
+    size = random_conversation_size()
+    group = random.sample(employees, size)
+
+    men = [p for p in group if p.gender == "Man"]
+    women = [p for p in group if p.gender == "Woman"]
+
+    num_men = len(men)
+    num_women = len(women)
+
+    for speaker in group:
+        # Speaker decides whether they TRY to make a sexist remark
+        if random.random() < speaker.comment_prob:
+
+            # Can only make a sexist remark if not outnumbered
+            if speaker.gender == "Man":
+                if num_men < num_women:
+                    continue  # outnumbered → cannot comment
+                target_group = women
+            else:
+                if num_women < num_men:
+                    continue  # outnumbered → cannot comment
+                target_group = men
+
+            if target_group:  # target exists
+                target = random.choice(target_group)
+                target.comments_received += 1
 
 
+# -----------------------------
+# Run many conversations
+# -----------------------------
+def simulate_many_conversations(employees, num_conversations):
+    for _ in range(num_conversations):
+        simulate_conversation(employees)
+
+
+# -----------------------------
+# Calculate averages
+# -----------------------------
 def average_comments(lst):
-    """
-    Returns a tuple that represents the average amount of comments received for men and women
-    respectively. Return statement will be in the form (<avg_for_men>, <avg_for_women>)
-    """
-    # TODO: Implement this function then remove this line
-    pass
+    men_comments = [p.comments_received for p in lst if p.gender == "Man"]
+    women_comments = [p.comments_received for p in lst if p.gender == "Woman"]
+
+    men_avg = sum(men_comments) / len(men_comments)
+    women_avg = sum(women_comments) / len(women_comments)
+
+    return men_avg, women_avg
 
 
+# -----------------------------
+# Main simulation
+# -----------------------------
 def main():
-    """
-    Print out information about the average comments
-    received by men and women after a simulation has been run
-    """
-    num_employees_to_generate = 100
-    num_comment_rounds = 50
+    num_employees = 100
+    num_conversations = 5000   # simulation now based on # of conversations
 
-    employee_list = create_employees(num_employees_to_generate)
-    create_commenters(employee_list)
-    for rounds in range(num_comment_rounds):
-        generate_comments(employee_list)
+    employees = create_employees(num_employees)
+    simulate_many_conversations(employees, num_conversations)
 
-    (men_avg, women_avg) = average_comments(employee_list)
-    print("  Men received on average ",   men_avg, "sexist comments")
+    men_avg, women_avg = average_comments(employees)
+    print("Men received on average   ", men_avg, "sexist comments")
     print("Women received on average ", women_avg, "sexist comments")
 
 
-if __name__ == "__main__":
-    "<----- Test code for print_employee_list ----->"
-    lst = [Employee('Man', True),
-           Employee('Man', False),
-           Employee('Woman', True),
-           Employee('Woman', False)]
-    print_employee_list(lst)
-
-    "<----- Test code for create_employees ----->"
-    employees = create_employees(10)
-    print_employee_list(employees)
-
-    "<----- Test code for create_commenters ----->"
-    create_commenters(employees)
-    print_employee_list(employees)
-
-    "<----- Test code for generate_comments ----->"
-    generate_comments(employees)
-    print_employee_list(employees)
-
-    "<----- Test code for average_comments ----->"
-    print(average_comments(employees))
-
-    "<----- Run the simulation ----->"
-    # main()  # <-- KEEP THIS, Uncomment it after implementing all the functions
+# ------------

@@ -32,8 +32,17 @@ def get_state_living_wage(state, table):
     living wage table (a list of dictionaries), this looks up the given
     state's row dictionary, and returns the annual living wage for that state.
     """
-    # TODO: finish this function
-    pass
+
+    state_input = state_input.lower()
+
+    for row in table:
+        state_name = row["State"].lower()
+        state_abbrev = row["Abbrev"].lower()
+
+        if state_input == state_name or state_input == state_abbrev:
+            return row["Living Wage"]
+
+    return None
 
 
 def get_low_wage_states(table):
@@ -43,9 +52,14 @@ def get_low_wage_states(table):
     wage of $7.25. It returns a new sunTable, a list, containing the row
     dictionaries
     """
-    # TODO: finish this function
-    pass
+    result = []
+    FED_MIN = 7.25
 
+    for row in table:
+        if row["State Minimum Wage"] == FED_MIN:
+            result.append(row)
+
+    return result
 
 def get_expensive_states(table):
     """
@@ -53,8 +67,14 @@ def get_expensive_states(table):
     this finds the 5 states with the highest living wage. It returns a list
     of the five state names
     """
-    # TODO: finish this function
-    pass
+
+    sorted_table = sorted(
+        table,
+        key=lambda row: row['AnnualLivingWage'],
+        reverse=True
+    )
+
+    return sorted_table[:5]
 
 
 def annual_wage(hourly_wage):
